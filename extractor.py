@@ -1,10 +1,10 @@
 import requests
+from bs4 import BeautifulSoup
 import os
 
 
 def main():
     url = 'https://p.eagate.573.jp/game/eacsdvx/vi/music/index.html'
-    cookies = r'visid_incap_2730193=j+sQgUFrQzW3spE/vPF+Rk0h52gAAAAAQUIPAAAAAACziLLRZcEiB9pERwiHsuVo; visid_incap_2775444=EMa9E3JqSyyCxbsYJZlZxlz4SmkAAAAAQUIPAAAAAAAlmTRzioxRzdOMttzvUEAn; _rslgvry=999db49f-65a6-490f-8d61-264796b6814f; M573SSID=f694bbbf-aa12-4688-8a94-451c805546c8; nlbi_2775444=IAARNyp1K1wrsJP38yJJLQAAAAB3gAOw1n8mpsoOFeekn/9M; incap_ses_236_2775444=QW9bfx8FsG0v+Aa1PXFGAz9qUWkAAAAAgIwWHZgB4W7kEFEMjjUq9Q=='
     payload = {'search_category': '', 'search_name': '', 'search_level': '13', 'search_condition': '', 'page': '2'}
     headers = { 'host': 'p.eagate.573.jp',
                 'origin': 'https://p.eagate.573.jp',
@@ -15,7 +15,14 @@ def main():
     response = session.post(url=url, data=payload)
 
     response.encoding = 'utf-8'
-    print(response.text)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    #print(soup.prettify())
+
+    #print(soup.find_all('div', id='music-result'))
+
+    for tag in soup.find_all('div', id='music-result'):
+        print(f'Tag: {tag}')
+    #    print(song_title.get('p'))
 
 
 
