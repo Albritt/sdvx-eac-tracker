@@ -23,6 +23,8 @@ def main():
             levels_dict[diff] = level
         ptags = tag.find_all("p")
         pack = ptags[-1].get_text()
+        jk_div = tag.find("div", class_ = "jk")
+        music_id_url = jk_div.find("a").get('href')
         print(f"Title: {title} ; Artist: {artist} ; Genre: {genre} ; Pack:{pack} ; Levels:{levels_dict}")
 
 if __name__ == "__main__":
