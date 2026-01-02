@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from requests_ratelimiter import LimiterSession
 import os
 
 
@@ -10,7 +11,7 @@ def main():
                 'origin': 'https://p.eagate.573.jp',
                 'referer': 'https://p.eagate.573.jp/game/eacsdvx/vi/music/index.html',
                 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36'}
-    session = requests.Session()
+    session = LimiterSession(per_second=1)
     session.get(url=url, headers=headers)
     response = session.post(url=url, data=payload)
 
