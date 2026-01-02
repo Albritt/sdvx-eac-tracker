@@ -1,13 +1,16 @@
 from bs4 import BeautifulSoup
+from collections import namedtuple
 import os
 import re
 
 
 def main():
+    Song = namedtuple('Song', ['title', 'artist', 'genre', 'pack', 'music_id', 'levels'])
     html_doc = []
     with open('html_doc.txt') as file:
         html_doc = file.read()
 
+    songs:list[Song] = []
     soup = BeautifulSoup(html_doc,'html.parser')
     for tag in soup.find_all(class_="music"):
         genre = tag.find(class_=re.compile("genre *")).text
@@ -15,12 +18,12 @@ def main():
         sub_info = info.p
         title = sub_info.text
         artist = info.find_next("p").find_next("p").text
-        levels_dict = {}
+        levels_dict: dict[str,list] = {}
         levels = tag.find("div", class_="level")
         for p in levels.find_all("p"):
             diff = p["class"][0].upper()
             level = int(p.get_text(strip=True))
-            levels_dict[diff] = level
+            levels_dict[diff] = [level]
         ptags = tag.find_all("p")
         pack = ptags[-1].get_text()
         jk_div = tag.find("div", class_ = "jk")
@@ -30,9 +33,24 @@ def main():
         if idx:
             idx = len(id_pattern) + idx 
             music_id = music_id_url[idx:]
-        print(f"Title: {title} ; Artist: {artist} ; Genre: {genre} ; Pack:{pack} ; Levels:{levels_dict}")
-        print(f"music_id_url: {music_id_url}")
-        print(f"music_id: {music_id}")
+        sub_doc = []
+        with open('html_sub_doc.txt') as file:
+            sub_doc = file.read()
+        sub_soup = BeautifulSoup(sub_doc, 'html.parser')
+        sub_tags = []
+        for sub_tag in sub_soup.find_all(class_="jk"):
+            sub_tags.append(sub_tag.find("img").get("src"))
+        for idx, value in enumerate(levels_dict.values()):
+            value.append(sub_tags[idx])
+
+
+        #print(f"Title: {title} ; Artist: {artist} ; Genre: {genre} ; Pack:{pack} ; Levels:{levels_dict}")
+        #print(f"music_id_url: {music_id_url}")
+        #print(f"music_id: {music_id}")
+        songs.append(Song(title, artist, genre, pack, music_id, levels_dict))
+    
+    for song in songs:
+        print(song)
 
 if __name__ == "__main__":
     main()
