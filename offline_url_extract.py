@@ -25,7 +25,14 @@ def main():
         pack = ptags[-1].get_text()
         jk_div = tag.find("div", class_ = "jk")
         music_id_url = jk_div.find("a").get('href')
+        id_pattern = 'music_id='
+        idx = music_id_url.index(id_pattern)
+        if idx:
+            idx = len(id_pattern) + idx 
+            music_id = music_id_url[idx:]
         print(f"Title: {title} ; Artist: {artist} ; Genre: {genre} ; Pack:{pack} ; Levels:{levels_dict}")
+        print(f"music_id_url: {music_id_url}")
+        print(f"music_id: {music_id}")
 
 if __name__ == "__main__":
     main()
