@@ -3,6 +3,12 @@ from bs4 import BeautifulSoup
 from requests_ratelimiter import LimiterSession
 import os
 
+def get_music_data(text: str)->bool:
+    soup = BeautifulSoup(text)
+    if soup.find(class_="music"):
+       pass
+    else:
+        return False
 
 def main():
     url = 'https://p.eagate.573.jp/game/eacsdvx/vi/music/index.html'
@@ -13,6 +19,20 @@ def main():
                 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36'}
     session = LimiterSession(per_second=1)
     session.get(url=url, headers=headers)
+    
+    page = 1
+    empty_page = False
+    sdvx_data = {}
+    while empty_page is False:
+        payload = {'search_category': '', 'search_name': '', 'search_level': '', 'search_condition': '', 'page': page}
+        response = session.post(url=url, data=payload)
+        response.encoding = 'utf-8'
+        data = get_music_data()
+        if data:
+            sdvx_data.update(data)
+        else:
+            empty_page = True
+
     response = session.post(url=url, data=payload)
 
     response.encoding = 'utf-8'
