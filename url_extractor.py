@@ -8,24 +8,36 @@ import json
 
 base_url = 'https://p.eagate.573.jp/'
 
+def add_jackets_to_charts(charts: dict, urls: list):
+    for idx, value in enumerate(charts.values()):
+        value['jacket_url'] = urls[idx]
+
 def parse_song_results(text: str) -> list[dict]:
     metadata = []
     soup = BeautifulSoup(text, 'html.parser')
     if soup.find(class_="music"):
        for tag in soup.find_all(class_="music"):
            #metadata.append(get_song_metadata(tag))
-           data = get_song_metadata(tag)
-           response = get_song_subpage(data['music_id_url'])
-           soup = BeautifulSoup(response, 'html.parser')
+           song_data = get_song_metadata(tag)
+           response = get_song_subpage(song_data['music_id_url'])
+           jacket_urls = get_song_jacket_urls(response)
+           add_jackets_to_charts(song_data,jacket_urls)
        return metadata
     return []
+
+def get_song_jacket_urls(text: str) -> list:
+    soup = BeautifulSoup(text, 'html.parser')
+    sub_tags = []
+    for sub_tag in soup.find_all(class_="jk"):
+        sub_tags.append(sub_tag.find("img").get("src"))
+    return sub_tags
 
 def get_song_metadata(tag: Tag) -> dict[str, Any]:
     genre = tag.find(class_=re.compile("genre *")).text
     info = tag.find("div", class_ = "info")
     title = info.find_next("p").text
     artist = info.find_next("p").find_next("p").text
-    levels = get_levels(tag)
+    charts = get_charts(tag)
     pack = tag.find_all("p")[-1].get_text()
     music_id_url = get_music_id_url()
     music_id = get_music_id(music_id_url)
@@ -40,8 +52,8 @@ def get_song_metadata(tag: Tag) -> dict[str, Any]:
     sub_tags = []
     for sub_tag in soup.find_all(class_="jk"):
         sub_tags.append(sub_tag.find("img").get("src"))
-    for idx, value in enumerate(levels.values()):
-        value.append(sub_tags[idx])
+    for idx, value in enumerate(charts.values()):
+        value['jacket_url'] = sub_tags[idx]
     return {
             'title': title,
             'artist': artist,
@@ -49,7 +61,7 @@ def get_song_metadata(tag: Tag) -> dict[str, Any]:
             'pack': pack,
             'music_id': music_id,
             'music_id_url': music_id_url,
-            'levels': levels   #Refactor levels to charts  
+            'charts': charts   #Refactor levels to charts  
             }
 
 def get_song_subpage(url:str) -> str:
@@ -60,14 +72,14 @@ def get_song_subpage(url:str) -> str:
     response.encoding = 'utf-8'
     return response.text
 
-def get_levels(tag: Tag) -> dict[str, list]:
-    levels: dict[str,list] = {}
-    levels_tag = tag.find("div", class_="level")
-    for p in levels_tag.find_all("p"):
+def get_charts(tag: Tag) -> dict[str, dict[str, int]]:
+    charts: dict[str,dict[str, int]] = {}
+    charts_tag = tag.find("div", class_="level")
+    for p in charts_tag.find_all("p"):
         diff = p["class"][0].upper()
-        level = int(p.get_text(strip=True))
-        levels[diff] = [level]
-    return levels
+        chart_level = int(p.get_text(strip=True))
+        charts[diff] = {'level' : chart_level}
+    return charts
 
 def get_music_id(music_id_url: str):
     id_pattern = 'music_id='
