@@ -8,7 +8,7 @@ import json
 
 base_url = 'https://p.eagate.573.jp/'
 
-def parse_music_results(text: str) -> list[dict]:
+def parse_song_results(text: str) -> list[dict]:
     metadata = []
     soup = BeautifulSoup(text, 'html.parser')
     if soup.find(class_="music"):
