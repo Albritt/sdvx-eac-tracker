@@ -19,8 +19,8 @@ def parse_song_results(text: str) -> list[dict]:
        for tag in soup.find_all(class_="music"):
            #metadata.append(get_song_metadata(tag))
            song_data = get_song_metadata(tag)
-           response = get_song_subpage(song_data['music_id_url'])
-           jacket_urls = get_song_jacket_urls(response)
+           subpage = get_song_subpage(song_data['music_id_url'])
+           jacket_urls = get_song_jacket_urls(subpage)
            add_jackets_to_charts(song_data,jacket_urls)
        return metadata
     return []
@@ -114,7 +114,7 @@ def main():
         payload = {'search_category': '', 'search_name': '', 'search_level': '', 'search_condition': '', 'page': page}
         response = session.post(url=url, data=payload)
         response.encoding = 'utf-8'
-        data = parse_music_results(response.text)
+        data = parse_song_results(response.text)
         if data:
             for song in data:
                 songs.extend(song)
