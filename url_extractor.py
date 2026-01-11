@@ -42,18 +42,6 @@ def get_song_metadata(tag: Tag) -> dict[str, Any]:
     music_id_url = get_music_id_url()
     music_id = get_music_id(music_id_url)
 
-
-    session = LimiterSession(per_second=1)
-    headers = { 'host': 'p.eagate.573.jp',
-                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36'}
-    response = session.get(url=base_url + music_id_url, headers=headers)
-    response.encoding = 'utf-8'
-    soup = BeautifulSoup(response, 'html.parser')
-    sub_tags = []
-    for sub_tag in soup.find_all(class_="jk"):
-        sub_tags.append(sub_tag.find("img").get("src"))
-    for idx, value in enumerate(charts.values()):
-        value['jacket_url'] = sub_tags[idx]
     return {
             'title': title,
             'artist': artist,
