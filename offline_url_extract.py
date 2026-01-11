@@ -3,6 +3,7 @@ from collections import namedtuple
 import os
 import re
 
+base_url = 'https://p.eagate.573.jp'
 
 def main():
     Song = namedtuple('Song', ['title', 'artist', 'genre', 'pack', 'music_id', 'charts'])
@@ -39,7 +40,7 @@ def main():
         sub_soup = BeautifulSoup(sub_doc, 'html.parser')
         sub_tags = []
         for sub_tag in sub_soup.find_all(class_="jk"):
-            sub_tags.append(sub_tag.find("img").get("src"))
+            sub_tags.append(base_url + str(sub_tag.find("img").get("src")))
         for idx, value in enumerate(charts.values()):
             value['jacket_url'] = sub_tags[idx]
 

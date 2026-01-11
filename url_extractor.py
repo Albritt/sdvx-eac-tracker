@@ -6,7 +6,7 @@ import re
 import os
 import json
 
-base_url = 'https://p.eagate.573.jp/'
+base_url = 'https://p.eagate.573.jp'
 
 def add_jackets_to_charts(charts: dict, urls: list):
     for idx, value in enumerate(charts.values()):
@@ -29,7 +29,7 @@ def get_song_jacket_urls(text: str) -> list:
     soup = BeautifulSoup(text, 'html.parser')
     sub_tags = []
     for sub_tag in soup.find_all(class_="jk"):
-        sub_tags.append(sub_tag.find("img").get("src"))
+        sub_tags.append(base_url + str(sub_tag.find("img").get("src")))
     return sub_tags
 
 def get_song_metadata(tag: Tag) -> dict[str, Any]:
@@ -121,6 +121,8 @@ def main():
             page+=1
         else:
             empty_page = True
+
+    json.dump(songs)
 
 
 if __name__ == "__main__":
