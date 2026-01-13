@@ -17,7 +17,7 @@ def parse_song_results(text: str, domain_name: str, headers: dict) -> list[dict]
        for tag in soup.find_all(class_="music"):
            song_data = get_song_metadata(tag)
            subpage = get_song_subpage(song_data['music_id_url'], domain_name)
-           jacket_urls = get_song_jacket_urls(subpage, domain_name)
+           jacket_urls = get_song_jacket_urls(subpage, domain_name, headers)
            add_jackets_to_charts(song_data,jacket_urls)
        return metadata
     return []
