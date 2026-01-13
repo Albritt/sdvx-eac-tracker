@@ -6,30 +6,27 @@ import re
 import os
 import json
 
-base_url = 'https://p.eagate.573.jp'
-
 def add_jackets_to_charts(charts: dict, urls: list):
     for idx, value in enumerate(charts.values()):
         value['jacket_url'] = urls[idx]
 
-def parse_song_results(text: str) -> list[dict]:
+def parse_song_results(text: str, domain_name: str, headers: dict) -> list[dict]:
     metadata = []
     soup = BeautifulSoup(text, 'html.parser')
     if soup.find(class_="music"):
        for tag in soup.find_all(class_="music"):
-           #metadata.append(get_song_metadata(tag))
            song_data = get_song_metadata(tag)
-           subpage = get_song_subpage(song_data['music_id_url'])
-           jacket_urls = get_song_jacket_urls(subpage)
+           subpage = get_song_subpage(song_data['music_id_url'], domain_name)
+           jacket_urls = get_song_jacket_urls(subpage, domain_name)
            add_jackets_to_charts(song_data,jacket_urls)
        return metadata
     return []
 
-def get_song_jacket_urls(text: str) -> list:
+def get_song_jacket_urls(text: str, domain_name: str) -> list:
     soup = BeautifulSoup(text, 'html.parser')
     sub_tags = []
     for sub_tag in soup.find_all(class_="jk"):
-        sub_tags.append(base_url + str(sub_tag.find("img").get("src")))
+        sub_tags.append(domain_name + str(sub_tag.find("img").get("src")))
     return sub_tags
 
 def get_song_metadata(tag: Tag) -> dict[str, Any]:
@@ -52,11 +49,9 @@ def get_song_metadata(tag: Tag) -> dict[str, Any]:
             'charts': charts   #Refactor levels to charts  
             }
 
-def get_song_subpage(url:str) -> str:
+def get_song_subpage(url:str, domain_name: str, headers:dict) -> str:
     session = LimiterSession(per_second=1)
-    headers = { 'host': 'p.eagate.573.jp',
-                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36'}
-    response = session.get(url=base_url + url, headers=headers)
+    response = session.get(url=domain_name + url, headers=headers)
     response.encoding = 'utf-8'
     return response.text
 
@@ -82,36 +77,33 @@ def get_music_id_url(tag: Tag) -> str:
 
 
 
-
-
-
-def main():
-    url = url = 'https://p.eagate.573.jp/game/eacsdvx/vi/music/index.html'
-    payload = {'search_category': '', 'search_name': '', 'search_level': '13', 'search_condition': '', 'page': '2'}
-    headers = { 'host': 'p.eagate.573.jp',
-                'origin': 'https://p.eagate.573.jp',
-                'referer': 'https://p.eagate.573.jp/game/eacsdvx/vi/music/index.html',
-                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36'}
+def scrape_sdvx(url: str, headers:dict, domain_name: str, 
+                max_page: int|None = None, search_name: str = '',
+                search_level: int|None = None,  pack_name: str = '')->list[dict]:
     session = LimiterSession(per_second=1)
     session.get(url=url, headers=headers)
 
     page = 1
     empty_page = False
     songs = []
+    if search_level is None:
+        search_level = ''
     while empty_page is False:
-        payload = {'search_category': '', 'search_name': '', 'search_level': '', 'search_condition': '', 'page': page}
+        payload = {'search_category': '', 'search_name': search_name,
+         'search_level': str(search_level), 'search_condition': pack_name, 'page': page}
         response = session.post(url=url, data=payload)
         response.encoding = 'utf-8'
-        data = parse_song_results(response.text)
+        data = parse_song_results(response.text, domain_name)
         if data:
             for song in data:
                 songs.extend(song)
             page+=1
         else:
             empty_page = True
-
-    json.dump(songs)
+        if page > max_page:
+            break
+    return songs
 
 
 if __name__ == "__main__":
-    main()
+    scrape_sdvx()
