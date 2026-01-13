@@ -100,8 +100,9 @@ def scrape_sdvx(url: str, headers:dict, domain_name: str,
             page+=1
         else:
             empty_page = True
-        if page > max_page:
-            break
+        if max_page:
+            if page > max_page:
+                break
     return songs
 
 
