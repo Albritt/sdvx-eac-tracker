@@ -1,0 +1,8 @@
+home_dir: ""
+domain_name: &domain_name "https://p.eagate.573.jp"
+site_url: &site_url 'https://p.eagate.573.jp/game/eacsdvx/vi/music/index.html'
+session_headers:
+  host: "p.eagate.573.jp"
+  origin: *domain_name
+  referer: *site_url
+  user-agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
