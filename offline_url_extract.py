@@ -2,10 +2,14 @@ from bs4 import BeautifulSoup
 from collections import namedtuple
 import os
 import re
+from config import load_config
+import hashlib
 
-base_url = 'https://p.eagate.573.jp'
+
+
 
 def main():
+    config = load_config()
     Song = namedtuple('Song', ['title', 'artist', 'genre', 'pack', 'music_id', 'charts'])
     html_doc = []
     with open('html_doc.txt') as file:
@@ -40,7 +44,7 @@ def main():
         sub_soup = BeautifulSoup(sub_doc, 'html.parser')
         sub_tags = []
         for sub_tag in sub_soup.find_all(class_="jk"):
-            sub_tags.append(base_url + str(sub_tag.find("img").get("src")))
+            sub_tags.append(config["domain_name"] + str(sub_tag.find("img").get("src")))
         for idx, value in enumerate(charts.values()):
             value['jacket_url'] = sub_tags[idx]
 
