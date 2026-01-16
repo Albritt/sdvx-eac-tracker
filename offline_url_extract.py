@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-from collections import namedtuple
 import os
 import re
 from config import load_config
@@ -10,12 +9,11 @@ import hashlib
 
 def main():
     config = load_config()
-    Song = namedtuple('Song', ['title', 'artist', 'genre', 'pack', 'music_id', 'charts'])
     html_doc = []
     with open('html_doc.txt') as file:
         html_doc = file.read()
 
-    songs:list[Song] = []
+    songs:list[dict[str,str|dict]] = []
     soup = BeautifulSoup(html_doc,'html.parser')
     for tag in soup.find_all(class_="music"):
         genre = tag.find(class_=re.compile("genre *")).text
@@ -52,10 +50,20 @@ def main():
         #print(f"Title: {title} ; Artist: {artist} ; Genre: {genre} ; Pack:{pack} ; Levels:{levels_dict}")
         #print(f"music_id_url: {music_id_url}")
         #print(f"music_id: {music_id}")
-        songs.append(Song(title, artist, genre, pack, music_id, charts))
+        songs.append({'title': title, 
+                        'artist': artist,
+                        'genre': genre,
+                        'pack': pack,
+                        'music_id': music_id,
+                        'charts': charts})
     
     for song in songs:
-        print(song)
+        for key, value in song['charts'].items():
+            #print(key)
+            #print(value['level'])
+            value['chart_id'] = hashlib.md5(str(song['title'] + song['artist'] + key + str(value['level'])).encode('utf-8')).hexdigest()
+
+    print(songs)
 
 if __name__ == "__main__":
     main()
