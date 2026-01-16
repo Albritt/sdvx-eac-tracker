@@ -5,12 +5,17 @@ from typing import Any
 import re
 import os
 import json
+import hashlib
 
-def add_jackets_to_charts(charts: dict, urls: list):
+def add_jackets_to_charts(charts: dict[str, int|str], urls: list[str]):
     for idx, value in enumerate(charts.values()):
         value['jacket_url'] = urls[idx]
 
-def parse_song_results(text: str, domain_name: str, headers: dict) -> list[dict]:
+def create_chart_id(song: dict[str, str|dict]):
+    for key, value in song['charts'].items():
+        value['chart_id'] = hashlib.md5(str(song['title'] + song['artist'] + key + str(value['level'])).encode('utf-8')).hexdigest()
+
+def parse_song_results(text: str, domain_name: str, headers: dict) -> list[dict[str, str|dict]]:
     metadata = []
     soup = BeautifulSoup(text, 'html.parser')
     if soup.find(class_="music"):
@@ -96,6 +101,8 @@ def scrape_sdvx(url: str, headers:dict, domain_name: str,
         response.encoding = 'utf-8'
         data = parse_song_results(response.text, domain_name, headers)
         if data:
+            for song in data:
+                create_chart_id(song)
             songs.extend(data)
             page+=1
         else:
