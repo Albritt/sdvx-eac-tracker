@@ -85,15 +85,18 @@ def get_music_id_url(tag: Tag) -> str:
 
 def scrape_sdvx(url: str, headers:dict, domain_name: str, 
                 max_page: int|None = None, search_name: str = '',
-                search_level: int|None = None,  pack_name: str = '')->list[dict]:
+                search_level: int = 0,  pack_name: str = '')->list[dict]:
     session = LimiterSession(per_second=1)
     session.get(url=url, headers=headers)
 
     page = 1
     empty_page = False
     songs = []
-    if search_level is None:
+    if search_level >= 1 and search_level < 21:
+        search_level = str(search_level)
+    else:
         search_level = ''
+
     while empty_page is False:
         payload = {'search_category': '', 'search_name': search_name,
          'search_level': str(search_level), 'search_condition': pack_name, 'page': page}
