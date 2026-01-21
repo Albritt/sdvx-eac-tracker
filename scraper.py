@@ -13,7 +13,7 @@ def add_jackets_to_charts(charts: dict[str, int|str], urls: list[str]):
 
 def create_chart_id(song: dict[str, str|dict]):
     for key, value in song['charts'].items():
-        value['chart_id'] = hashlib.md5(str(song['title'] + song['artist'] + key + str(value['level'])).encode('utf-8')).hexdigest()
+        value['chart_id'] = hashlib.md5(str(song['music_id'] + key).encode('utf-8')).hexdigest()
 
 def parse_song_results(text: str, domain_name: str, headers: dict) -> list[dict[str, str|dict]]:
     metadata = []
