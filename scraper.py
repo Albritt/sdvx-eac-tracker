@@ -115,13 +115,13 @@ def scrape_sdvx(url: str, headers:dict, domain_name: str,
                 break
     return songs
 
-def request_jacket(img_url, path) -> bytes|Any:
+def request_jacket(img_url) -> bytes|Any:
     response = requests.get(img_url)
     #TODO: This is also returning None
     if response.status_code == 200:
         return response.content
     else:
-        print(f"Unable to download for: {path}")
+        print(f"Unable to download for: {img_url}")
         
 
 
