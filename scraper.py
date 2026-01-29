@@ -117,7 +117,7 @@ def scrape_sdvx(url: str, headers:dict, domain_name: str,
 
 def request_jacket(img_url, path) -> bytes|Any:
     response = requests.get(img_url)
-
+    #TODO: This is also returning None
     if response.status_code == 200:
         return response.content
     else:
