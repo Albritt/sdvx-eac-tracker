@@ -28,18 +28,20 @@ def read_from_json(base_dir: str = "") -> list[dict[str, Any]]:
     
 def update_jackets(songs:list[dict[str, Any]], base_dir:str = ""):
     if base_dir == "":
-        path ="./jackets/"
+        path ="./data/jackets/"
     else:
-        path = base_dir + "/jackets/"
+        path = base_dir + "/data/jackets/"
     for song in songs:
-        path = Path(song['music_id'] + path)
+        music_folder_path = Path(path + song['music_id'])
         for diff_name in dict(song['charts']).keys():
-            path = Path(f"{base_dir}/jackets/{diff_name}.jpg")
-            if path.exists():
+            jacket_path = Path(f"{music_folder_path}/{diff_name}.jpg")
+            if jacket_path.is_file():
                 continue
             else:
-                content = request_jacket(diff_name["jacket_url"])
-                with open(path, 'wb') as jacket:
+                jacket_url = song['charts'][diff_name]['jacket_url']
+                jacket_path.parent.mkdir(parents=True, exist_ok=True)
+                content = request_jacket(jacket_url)
+                with open(jacket_path, 'wb') as jacket:
                     jacket.write(content)
 
 
