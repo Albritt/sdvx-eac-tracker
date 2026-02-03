@@ -116,7 +116,8 @@ def scrape_sdvx(url: str, headers:dict, domain_name: str,
     return songs
 
 def request_jacket(img_url) -> bytes|Any:
-    response = requests.get(img_url)
+    session = LimiterSession(per_second=1)
+    response = session.get(img_url)
     #TODO: This is also returning None
     if response.status_code == 200:
         return response.content
