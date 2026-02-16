@@ -1,4 +1,4 @@
-CREATE TABLE MUSIC(
+CREATE TABLE music(
     music_id TEXT(MAX) PRIMARY KEY,
     title TEXT(MAX),
     artist TEXT(MAX),
