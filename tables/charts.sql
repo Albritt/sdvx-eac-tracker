@@ -3,4 +3,5 @@ CREATE TABLE charts(
     music_id TEXT REFERENCES music,
     level INT,
     difficulty TEXT
+    jacket_path TEXT
 );
