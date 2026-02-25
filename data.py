@@ -16,6 +16,7 @@ def write_to_json(songs:list[dict], base_dir: str = "") -> None:
         json.dump(songs, file, ensure_ascii=False, indent=2)
 
 def read_from_json(base_dir: str = "") -> list[dict[str, Any]]:
+    #TODO:Need to handle the case where this is called and there is nothing to return
     if base_dir == "":
         path = "./data/sdvx_data.json"
         input_file = Path(path)
@@ -38,6 +39,7 @@ def update_jackets(songs:list[dict[str, Any]], base_dir:str = ""):
 def make_jacket_paths(song_path: Path, charts:dict[str,dict[str,str|int]]):
     for diff_name in charts.keys():
         jacket_path = Path(f"{song_path}/{diff_name}.jpg")
+        charts[diff_name]['jacket_path'] = str(jacket_path)
         if jacket_path.is_file():
             continue
         else:
