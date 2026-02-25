@@ -52,3 +52,13 @@ def write_jacket(jacket_path: Path, jacket_url:str):
         jacket.write(content)
 
 
+def normalize_data(songs:list[dict[str, Any]]):
+    charts = []
+    music = []
+    pass
+
+def extract_music():
+    pass
+
+def extract_charts():
+    pass
