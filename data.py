@@ -36,7 +36,7 @@ def update_jackets(songs:list[dict[str, Any]], base_dir:str = ""):
         music_folder_path = Path(path + song['music_id'])
         make_jacket_paths(music_folder_path, song['charts'])
 
-def make_jacket_paths(song_path: Path, charts:dict[str,dict[str,str|int]]):
+def make_jacket_paths(song_path: Path, charts:dict[str,dict]):
     for diff_name in charts.keys():
         jacket_path = Path(f"{song_path}/{diff_name}.jpg")
         charts[diff_name]['jacket_path'] = str(jacket_path)
@@ -55,10 +55,28 @@ def write_jacket(jacket_path: Path, jacket_url:str):
 def normalize_data(songs:list[dict[str, Any]]):
     charts = []
     music = []
-    pass
+    for song in songs:
+        music.append(extract_music(song))
+        charts.extend(extract_charts(song['charts'], song['music_id']))
+    return tuple(music, charts)   
 
-def extract_music():
-    pass
+def extract_music(song:dict[str, Any]):
+    music_dict = {}
+    music_dict['music_id'] = song['music_id']
+    music_dict['title'] = song['title']
+    music_dict['artist'] = song['artist']
+    music_dict['genre'] = song['genre']
+    music_dict['pack'] = song['pack']
+    return music_dict
 
-def extract_charts():
-    pass
+def extract_charts(charts:dict[str,dict], music_id:str):
+    difficulties = []
+    for diff_name in charts.keys():
+        chart_dict = {}
+        chart_dict['chart_id'] = [diff_name]['chart_id']
+        chart_dict['music_id'] = music_id
+        chart_dict['level'] = [diff_name]['level']
+        chart_dict['difficulty'] = diff_name
+        chart_dict['jacket_path'] = [diff_name]['jacket_path']
+    difficulties.append(chart_dict)
+    return difficulties
