@@ -68,6 +68,7 @@ def extract_music(song:dict[str, Any]):
     music_dict['artist'] = song['artist']
     music_dict['genre'] = song['genre']
     music_dict['pack'] = song['pack']
+    music_dict['music_id_url'] = song['music_id_url']
     return music_dict
 
 def extract_charts(charts:dict[str,dict], music_id:str):
