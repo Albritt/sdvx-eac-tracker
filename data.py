@@ -46,6 +46,7 @@ def make_jacket_paths(song_path: Path, charts:dict[str,dict]):
             write_jacket(jacket_path, charts[diff_name]['jacket_url'])
 
 def write_jacket(jacket_path: Path, jacket_url:str):
+    #TODO: Should have try around writing to filesystem
     jacket_path.parent.mkdir(parents=True,exist_ok=True)
     content = request_jacket(jacket_url)
     with open(jacket_path, 'wb') as jacket:
@@ -58,7 +59,7 @@ def normalize_data(songs:list[dict[str, Any]]):
     for song in songs:
         music.append(extract_music(song))
         charts.extend(extract_charts(song['charts'], song['music_id']))
-    return tuple(music, charts)   
+    return (music, charts)   
 
 def extract_music(song:dict[str, Any]):
     music_dict = {}
@@ -73,10 +74,10 @@ def extract_charts(charts:dict[str,dict], music_id:str):
     difficulties = []
     for diff_name in charts.keys():
         chart_dict = {}
-        chart_dict['chart_id'] = [diff_name]['chart_id']
+        chart_dict['chart_id'] = charts[diff_name]['chart_id']
         chart_dict['music_id'] = music_id
-        chart_dict['level'] = [diff_name]['level']
+        chart_dict['level'] = charts[diff_name]['level']
         chart_dict['difficulty'] = diff_name
-        chart_dict['jacket_path'] = [diff_name]['jacket_path']
+        chart_dict['jacket_path'] = charts[diff_name]['jacket_path']
     difficulties.append(chart_dict)
     return difficulties
