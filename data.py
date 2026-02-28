@@ -80,5 +80,5 @@ def extract_charts(charts:dict[str,dict], music_id:str):
         chart_dict['level'] = charts[diff_name]['level']
         chart_dict['difficulty'] = diff_name
         chart_dict['jacket_path'] = charts[diff_name]['jacket_path']
-    difficulties.append(chart_dict)
+        difficulties.append(chart_dict)
     return difficulties
