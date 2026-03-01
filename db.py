@@ -14,3 +14,11 @@ def setup_db():
         conn.commit()
     conn.close()
 
+def populate_tables(music: dict, charts: dict):
+    chart_df = pd.DataFrame(charts)
+    music_df = pd.DataFrame(music) 
+
+    engine = create_engine(f"sqlite:///sdvxkonasute.db")
+
+    chart_df.to_sql(name="charts", con=engine, if_exists='append', index=False)
+    music_df.to_sql(name="music", con=engine, if_exists='append', index=False)
