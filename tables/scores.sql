@@ -1,5 +1,6 @@
+DROP TABLE IF EXISTS scores;
 CREATE TABLE scores(
-    score_id PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    score_id INTEGER PRIMARY KEY AUTOINCREMENT,
     chart_id TEXT REFERENCES charts,
     grade TEXT,
     medal TEXT,

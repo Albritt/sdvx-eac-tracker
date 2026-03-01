@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS music;
 CREATE TABLE music(
     music_id TEXT PRIMARY KEY,
     title TEXT,
