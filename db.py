@@ -20,5 +20,5 @@ def populate_tables(music: dict, charts: dict):
 
     engine = create_engine(f"sqlite:///sdvxkonasute.db")
 
-    chart_df.to_sql(name="charts", con=engine, if_exists='append', index=False)
-    music_df.to_sql(name="music", con=engine, if_exists='append', index=False)
+    chart_df.to_sql(name="charts", con=engine, if_exists='replace', index=False)
+    music_df.to_sql(name="music", con=engine, if_exists='replace', index=False)
