@@ -1,7 +1,12 @@
 import pandas as pd
 import sqlite3
 from sqlalchemy import create_engine
+from datetime import datetime
 
+def add_score(song_title: str, artist: str, grade: str, medal: str, achieved_time: datetime , clear_type: str):
+    with sqlite3.connect("sdvxkonasute.db") as conn:
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO scores(chart_id, score, medal, achieved_at, ex_score)")
 
 def setup_db():
     conn = sqlite3.connect("sdvxkonasute.db")
