@@ -3,8 +3,6 @@ from scraper import scrape_sdvx
 from data import write_to_json, read_from_json, update_jackets, normalize_data
 from db import setup_db, populate_tables
 import pandas as pd
-import psycopg
-from sqlalchemy import create_engine
 from pathlib import Path
 
 def main():
