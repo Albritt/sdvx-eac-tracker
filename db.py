@@ -4,10 +4,23 @@ from sqlalchemy import create_engine
 from datetime import datetime
 
 #TODO: Maybe use Decimal instead of float for max?, also maybe use a dict instead
-def add_score(song_title: str, artist: str, score: int, exscore:int, max: float, medal: str, achieved_time: datetime , clear_type: str):
+def add_score(song_title: str, artist: str, level:int, diff:str, score: int, exscore:int, max: float, medal: str, achieved_time: datetime , clear_type: str):
+    chart_id = get_chart_id(song_title, artist, level, diff)
     with sqlite3.connect("sdvxkonasute.db") as conn:
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO scores(chart_id, score, medal, achieved_at, ex_score)")
+        cursor.execute(r"""INSERT INTO scores(chart_id, score, medal, achieved_at, ex_score)
+                            values (?, ?, ?, ?, ?) """,(chart_id, score, medal, achieved_time, exscore))
+
+def get_chart_id(song_title:str, artist:str, level:int, diff:str) -> int:
+    with sqlite3.connect("sdvxkonasute.db") as conn:
+        cursor = conn.cursor()
+        cursor.execute(r"""SELECT charts.chart_id
+                            FROM charts
+                            INNER JOIN music ON music.music_id = charts.music_id
+                            WHERE music.title = ? AND music.artist = ?
+                            AND charts.level = ? AND charts.difficulty = ?""", (song_title, artist, level, diff))
+        row = cursor.fetchone()
+        return(row.chart_id)
 
 def setup_db():
     conn = sqlite3.connect("sdvxkonasute.db")
