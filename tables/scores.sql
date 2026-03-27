@@ -4,7 +4,7 @@ CREATE TABLE scores(
     chart_id TEXT REFERENCES charts,
     score INTEGER,
     exscore INTEGER,
-    max REAL,
+    max_score REAL,
     medal TEXT,
     achieved_at DATE,
     clear_type TEXT
