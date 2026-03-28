@@ -21,7 +21,7 @@ def get_chart_id(song_title:str, artist:str, level:int, diff:str) -> int:
                             WHERE music.title = ? AND music.artist = ?
                             AND charts.level = ? AND charts.difficulty = ?""", (song_title, artist, level, diff))
         row = cursor.fetchone()
-        return(row.chart_id)
+        return(row[0])
 
 def setup_db():
     conn = sqlite3.connect("sdvxkonasute.db")
