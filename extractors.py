@@ -15,7 +15,7 @@ def extract_scores(path:str|Path, **kwargs):
         raise NotImplementedError()
 
 def extract_csv(path:Path):
-        raise NotImplementedError
+        raise NotImplementedError()
 
 def extract_img(path: Path):
     title_coords = (385, 995, 895, 1027)
