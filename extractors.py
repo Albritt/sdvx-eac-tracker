@@ -1,7 +1,10 @@
 from __future__ import annotations
 from PIL import Image
+import csv
 import pytesseract
 from pathlib import Path
+from config import load_config
+config = load_config()
 
 def extract_scores(path:str|Path, **kwargs):
     path = Path(path)
@@ -15,7 +18,25 @@ def extract_scores(path:str|Path, **kwargs):
         raise NotImplementedError()
 
 def extract_csv(path:Path):
-        raise NotImplementedError()
+    scores = []
+    with open(path) as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            score = {}
+            if config['csv']['song_title']:
+                row[config['csv']['song_title']] = score['title']
+            if config['csv']['artist']:
+                row[config['csv']['artist']] = score['artist']
+            if config['csv']['level']:
+                row[config['csv']['level']] = score['level']
+            if config['csv']['difficulty']:
+                row[config['csv']['difficulty']] = score['difficulty']
+            if config['csv']['score']:
+                row[config['csv']['score']] = score['score']
+            if config['csv']['exscore']:
+                row[config['csv']['exscore']] = score['exscore']
+            scores.append(score)
+    return scores
 
 def extract_img(path: Path):
     title_coords = (385, 995, 895, 1027)
