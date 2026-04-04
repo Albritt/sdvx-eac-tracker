@@ -13,11 +13,12 @@ def extract_scores(path:str|Path, **kwargs):
     name,ext=path.split('.')
     extractor = SCORE_EXTRACTORS.get(ext.lower())
     if extractor:
-        scores = extractor(filepath, kwargs)
+        scores = extractor(path)
+        return scores
     else:
         raise NotImplementedError()
 
-def extract_csv(path:Path):
+def extract_csv(path:Path, **kwargs):
     scores = []
     with open(path) as csvfile:
         reader = csv.DictReader(csvfile)
@@ -38,7 +39,7 @@ def extract_csv(path:Path):
             scores.append(score)
     return scores
 
-def extract_img(path: Path):
+def extract_img(path: Path, **kwargs):
     title_coords = (385, 995, 895, 1027)
     artist_coords = (385, 1030, 895, 1062)
     score_coords = (420, 1065, 807, 1123) 
@@ -53,10 +54,10 @@ def extract_img(path: Path):
     
     cropped_img.save('new.jpg')
     
-def extract_json(path:Path):
+def extract_json(path:Path, **kwargs):
     raise NotImplementedError()
 
-def extract_txt(path:Path):
+def extract_txt(path:Path, **kwargs):
     raise NotImplementedError()
 SCORE_EXTRACTORS = {
         '.txt' : extract_txt,
