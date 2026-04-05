@@ -6,7 +6,7 @@ from pathlib import Path
 from config import load_config
 config = load_config()
 
-def extract_scores(path:str|Path, **kwargs):
+def extract_scores(path:str|Path):
     path = Path(path)
     if path.is_dir():
         extract_img(path)
@@ -18,7 +18,7 @@ def extract_scores(path:str|Path, **kwargs):
     else:
         raise NotImplementedError()
 
-def extract_csv(path:Path, **kwargs):
+def extract_csv(path:Path):
     scores = []
     with open(path) as csvfile:
         reader = csv.DictReader(csvfile)
@@ -39,7 +39,7 @@ def extract_csv(path:Path, **kwargs):
             scores.append(score)
     return scores
 
-def extract_img(path: Path, **kwargs):
+def extract_img(path: Path):
     title_coords = (385, 995, 895, 1027)
     artist_coords = (385, 1030, 895, 1062)
     score_coords = (420, 1065, 807, 1123) 
@@ -54,10 +54,10 @@ def extract_img(path: Path, **kwargs):
     
     cropped_img.save('new.jpg')
     
-def extract_json(path:Path, **kwargs):
+def extract_json(path:Path):
     raise NotImplementedError()
 
-def extract_txt(path:Path, **kwargs):
+def extract_txt(path:Path):
     raise NotImplementedError()
 SCORE_EXTRACTORS = {
         '.txt' : extract_txt,
