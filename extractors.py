@@ -25,17 +25,21 @@ def extract_csv(path:Path):
         for row in reader:
             score = {}
             if config['csv']['song_title']:
-                row[config['csv']['song_title']] = score['title']
+                score['title'] = row[config['csv']['song_title']]
             if config['csv']['artist']:
-                row[config['csv']['artist']] = score['artist']
+                score['artist'] = row[config['csv']['artist']]
             if config['csv']['level']:
-                row[config['csv']['level']] = score['level']
+                score['level'] = row[config['csv']['level']]
             if config['csv']['difficulty']:
-                row[config['csv']['difficulty']] = score['difficulty']
+                score['difficulty'] = row[config['csv']['difficulty']]
             if config['csv']['score']:
-                row[config['csv']['score']] = score['score']
+                score['score'] = row[config['csv']['score']]
             if config['csv']['exscore']:
-                row[config['csv']['exscore']] = score['exscore']
+                score['exscore'] = row[config['csv']['exscore']]
+            if config['csv']['medal']:
+                score['medal'] = row[config['csv']['medal']]
+            if config['csv']['achieved_at']:
+                score['csv'] = row[config['csv']['achieved_at']]
             scores.append(score)
     return scores
 

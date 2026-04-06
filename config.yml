@@ -13,4 +13,6 @@ csv_columns:
   difficulty: ""
   score: ""
   exscore: ""
+  medal: ""
+  achieved_at: ""
 
