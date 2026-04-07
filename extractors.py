@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 from PIL import Image
 import csv
 import pytesseract
@@ -6,7 +7,7 @@ from pathlib import Path
 from config import load_config
 config = load_config()
 
-def extract_scores(path:str|Path):
+def extract_scores(path:str|Path) -> dict[str, Any]:
     path = Path(path)
     if path.is_dir():
         extract_img(path)
